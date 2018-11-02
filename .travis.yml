@@ -41,7 +41,7 @@ jobs:
     - stage: mypy
       python: "3.6"
       script:
-        - mypy spacy_readability
+        - mypy spacy_readability --ignore-missing-imports
 
     - stage: pylint
       python: "3.6"
