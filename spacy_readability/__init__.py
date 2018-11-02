@@ -72,6 +72,7 @@ class Readability:
         return doc
 
     def fk_grade(self, doc):
+        """Returns Flesch-Kincaid score for the document."""
         if self.num_sentences == 0 or self.num_words == 0 or self.num_syllables == 0:
             return 0
         return (
@@ -81,6 +82,7 @@ class Readability:
         )
 
     def fk_ease(self, doc):
+        """Returns Flesch-Kincaid Reading Ease score for the document."""
         if self.num_sentences == 0 or self.num_words == 0 or self.num_syllables == 0:
             return 0
         words_per_sent = self.num_words / self.num_sentences
@@ -88,6 +90,7 @@ class Readability:
         return 206.835 - (1.015 * words_per_sent) - (84.6 * syllables_per_word)
 
     def dale_chall(self, doc):
+        """Returns the Dale Chall score for the document."""
         if self.num_sentences == 0 or self.num_words == 0:
             return 0
 
@@ -135,6 +138,7 @@ class Readability:
         return 4.71 * letter_to_words + 0.5 * words_to_sents - 21.43
 
     def forcast(self, doc):
+        """Returns Forcast score for the document."""
         if self.num_words < 150:
             return 0
         mono_syllabic = 0
@@ -144,14 +148,16 @@ class Readability:
         return 20 - (mono_syllabic / 10)
 
     def get_num_words(self, doc):
-        # filter punctuation and words that start with apostrophe (aka contractions)
+        """Returns the number of words in the document.
+        Filters punctuation and words that start with apostrophe (aka contractions)"""
         filtered_words = [
             word for word in doc if not word.is_punct and "'" not in word.text
         ]
         return len(filtered_words)
 
     def get_num_syllables(self, doc, min_syllables=1):
-        # filter punctuation and words that start with apostrophe (aka contractions)
+        """Returns the number of syllables in the document.
+        Filters punctuation and words that start with apostrophe (aka contractions)."""
         text = (word for word in doc if not word.is_punct and "'" not in word.text)
         syllables_per_word = tuple(syllapy.count(word.text) for word in text)
         return sum(c for c in syllables_per_word if c >= min_syllables)
