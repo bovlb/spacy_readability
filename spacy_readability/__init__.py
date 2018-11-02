@@ -94,7 +94,10 @@ class Readability:
         diff_words_count = 0
         for word in doc:
             if not word.is_punct and "'" not in word.text:
-                if word.text.lower() not in word_list and word.lemma_.lower() not in word_list:
+                if (
+                    word.text.lower() not in word_list
+                    and word.lemma_.lower() not in word_list
+                ):
                     diff_words_count += 1
 
         percent_difficult_words = 100 * diff_words_count / self.num_words
