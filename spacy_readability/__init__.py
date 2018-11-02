@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Top-level package for spacy_readability."""
 
 __author__ = """Michael Holtzscher"""
@@ -9,21 +7,21 @@ __version__ = "1.3.0"
 from math import sqrt
 
 from spacy.tokens import Doc
-
-from .words import word_list
 import syllapy
 
+from .words import word_list
 
-class Readability(object):
-    """spaCy v2.0 pipeline component for calculating readability scores of of text. Provides scores for
-    Flesh-Kincaid grade level, Flesh-Kincaid reading ease, and Dale-Chall.
+
+class Readability:
+    """spaCy v2.0 pipeline component for calculating readability scores of of text.
+    Provides scores for Flesh-Kincaid grade level, Flesh-Kincaid reading ease, and Dale-Chall.
     USAGE:
         >>> import spacy
         >>> from spacy_readability import Readability
         >>> nlp = spacy.load('en')
         >>> read = Readability()
         >>> nlp.add_pipe(read, last=True)
-        >>> doc = nlp("I am some really difficult text to read because I use obnoxiously large words.")
+        >>> doc = nlp("I use obnoxiously large words and I'm complex.")
         >>> print(doc._.flesch_kincaid_grade_level)
         >>> print(doc._.flesch_kincaid_reading_ease)
         >>> print(doc._.dale_chall)
@@ -38,6 +36,10 @@ class Readability(object):
     def __init__(self):
         """Initialise the pipeline component.
         """
+        self.num_sentences = None
+        self.num_words = None
+        self.num_syllables = None
+
         if not Doc.has_extension("flesch_kincaid_grade_level"):
             Doc.set_extension("flesch_kincaid_grade_level", getter=self.fk_grade)
 
@@ -92,10 +94,7 @@ class Readability(object):
         diff_words_count = 0
         for word in doc:
             if not word.is_punct and "'" not in word.text:
-                if (
-                    word.text.lower() not in word_list
-                    and word.lemma_.lower() not in word_list
-                ):
+                if word.text.lower() not in word_list and word.lemma_.lower() not in word_list:
                     diff_words_count += 1
 
         percent_difficult_words = 100 * diff_words_count / self.num_words
