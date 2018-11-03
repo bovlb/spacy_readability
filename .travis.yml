@@ -3,7 +3,7 @@ language: python
 stages:
   - black
   - mypy
-  - pylint
+  # - pylint
   - test
 
 cache:
@@ -43,7 +43,7 @@ jobs:
       script:
         - mypy spacy_readability --ignore-missing-imports
 
-    - stage: pylint
-      python: "3.6"
-      script:
-        - pylint spacy_readability
+    # - stage: pylint
+    #   python: "3.6"
+    #   script:
+    #     - pylint spacy_readability
